@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+// Css styling for Table
+
 export const Table = styled.table`
   width: 100%;
   margin-top: 24px;

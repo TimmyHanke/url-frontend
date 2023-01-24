@@ -8,6 +8,7 @@ interface Props<T> {
 }
 
 function TableHeader<T>({ columns, sortColumn, onSort }: Props<T>) {
+  // changes the ascending and descending depending on what it previously was.
   const raiseSort = (path: string) => {
     if (sortColumn.path === path) {
       sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
@@ -16,12 +17,6 @@ function TableHeader<T>({ columns, sortColumn, onSort }: Props<T>) {
       sortColumn.order = "asc";
     }
     onSort({ ...sortColumn });
-  };
-
-  const renderSortIcon = (column: Column<T>) => {
-    if (sortColumn.path !== column.path) return null;
-    if (sortColumn.order === "asc") return <i className="fas fa-caret-up" />;
-    return <i className="fas fa-caret-down" />;
   };
 
   return (
@@ -33,7 +28,7 @@ function TableHeader<T>({ columns, sortColumn, onSort }: Props<T>) {
             style={{ cursor: column.path && "pointer" }}
             onClick={() => column.path && raiseSort(column.path)}
           >
-            {column.label} {renderSortIcon(column)}
+            {column.label}
           </th>
         ))}
       </TR>

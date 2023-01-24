@@ -6,7 +6,7 @@ import _ from "lodash";
 import Table, { SortColumn } from "./Table";
 import { useHistory } from "react-router-dom";
 import "../App.css";
-import Pagination from "../Pagination";
+import Pagination from "./Pagination";
 function App() {
   interface FormData {
     url: string;
@@ -33,11 +33,14 @@ function App() {
   }, []);
   const handleSort = (sortColumn: SortColumn) => setSortColumn(sortColumn);
 
+  // gets all the urls from the database and loads it on UseEffect
+
   async function getUrl() {
     const { data } = await axios.get("http://localhost:4000/api/short");
     return setUrlList(data);
   }
 
+  // Sets the formdata on event , the added Url , if the date box is ticked and if ticked what date.
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     //@ts-ignore
@@ -46,36 +49,43 @@ function App() {
     setFormData({ ...formData });
   }
 
+  //
   function handleSubmit(data: FormData) {
+    // If Validation date is ticked set the ValidTo to the date picked
     if (formData.box) {
       axios.post("http://localhost:4000/api/short", {
         original: formData.url,
         validTo: formData.date,
       });
-    } else
+    }
+    // Validation date is not in use set ValidTo to Null , will be a link that dosn't use validation on the date.
+    else
       axios.post("http://localhost:4000/api/short", {
         original: formData.url,
         validTo: null,
       });
   }
-
+  // Sets the tick box from true to false that triggers the Date function.
   function handleBox(e: React.ChangeEvent<HTMLInputElement>) {
     const data = (formData.box = !formData.box);
     return setFormData({ ...formData });
   }
 
+  // Sets the correct Params that will be used to toggle between different Urls to go to the right link and only work if Valid date.
   async function handleUrl(item: any) {
     console.log(item.newUrl);
     window.location.href = `${item.newUrl}`;
     await axios.get(`http://localhost:4000/${item.addon}`);
   }
 
+  // sends the params to indicate what Url in the database to be deleted.
   async function handleDelete(id: string) {
     const url = await axios.delete("http://localhost:4000/api/short/" + id);
     let newUrl = urlList.filter((u: any) => u._id !== id);
     return setUrlList(newUrl);
   }
 
+  // Sets the right information to be used on The Table.
   const columns = [
     {
       path: "original",
@@ -119,15 +129,16 @@ function App() {
     },
   ];
 
+  // Sets the direction of the Colums by ascending or descending
   const sortedOrders = _.orderBy(
     urlList,
     [sortColumn.path],
     [sortColumn.order]
   );
 
+  // Handles the page change on Pagination and uses Slice to adjust what will be shown on each Table page by the desierd amount (10)
   const handlePageChange = async (page: any) => {
     setSelectedPage(page);
-    console.log(page);
     const startIndex = (page - 1) * 10;
     const endIndex = page * 10;
     setUrlList(urlList.slice(startIndex, endIndex));
@@ -183,6 +194,8 @@ function App() {
 }
 
 export default App;
+
+// Styling for the entire Url page
 
 const Back = styled.div`
   height: 110%;

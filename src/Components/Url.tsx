@@ -124,9 +124,10 @@ function App() {
     [sortColumn.path],
     [sortColumn.order]
   );
-  const handlePageChange = async (page: number) => {
-    setSelectedPage(page);
 
+  const handlePageChange = async (page: any) => {
+    setSelectedPage(page);
+    console.log(page);
     const startIndex = (page - 1) * 10;
     const endIndex = page * 10;
     setUrlList(urlList.slice(startIndex, endIndex));

@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 function Pagination({ itemCount, pageSize, selectedPage, onPageChange }: any) {
   const pageCount = Math.ceil(itemCount / pageSize);
-  if (itemCount.length > 10) return null;
+  if (itemCount < 11) return null;
   const pages = _.range(1, pageCount + 1);
   return (
     <Paginate>
